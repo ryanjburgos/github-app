@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, Subject, switchMap } from 'rxjs';
+import { finalize, map, Observable, Subject, switchMap, take, tap } from 'rxjs';
 import { CommitResponseModel } from '../../shared/models/dto/commit-response.mode';
 import { CommitsTableModel } from '../../shared/models/ui/commits-table.model';
-import { GithubService } from '../../shared/services/github.service';
+import { GithubService } from '../../shared/services/http/github.service';
+import { SpinnerService } from '../../shared/services/utils/spinner.service';
 
 @Component({
   selector: 'app-commits',
@@ -16,7 +17,12 @@ export class CommitsComponent implements OnInit, OnDestroy {
 
   private _onDestroyObservable$: Subject<void> = new Subject();
 
-  constructor(private githubService: GithubService, private route: ActivatedRoute, private location: Location) {
+  constructor(
+    private githubService: GithubService,
+    private route: ActivatedRoute,
+    private location: Location,
+    private spinnerService: SpinnerService
+  ) {
     this.loadCommitsByRepoName();
   }
 
@@ -29,6 +35,8 @@ export class CommitsComponent implements OnInit, OnDestroy {
 
   public loadCommitsByRepoName(): void {
     this.commits$ = this.route.queryParams.pipe(
+      tap(() => this.spinnerService.show()),
+      take(1),
       map((params) => params['repositoryName']),
       switchMap((repoName) => this.githubService.getCommitsByRepoName(repoName)),
       map((response: CommitResponseModel[]) =>
@@ -40,7 +48,8 @@ export class CommitsComponent implements OnInit, OnDestroy {
           };
           return commitTable;
         })
-      )
+      ),
+      finalize(() => this.spinnerService.hide())
     );
   }
 

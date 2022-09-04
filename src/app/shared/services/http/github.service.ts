@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BaseSearchResponseModel } from '../models/dto/base-response.model';
-import { CommitResponseModel } from '../models/dto/commit-response.mode';
-import { RepositoryResponseModel } from '../models/dto/repository-response.model';
+import { BaseSearchResponseModel } from '../../models/dto/base-response.model';
+import { CommitResponseModel } from '../../models/dto/commit-response.mode';
+import { RepositoryResponseModel } from '../../models/dto/repository-response.model';
 
 @Injectable({
   providedIn: 'root',
