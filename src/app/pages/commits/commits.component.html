@@ -1,1 +1,8 @@
-<app-table *ngIf="commits$ | async as commits" [data]="commits"></app-table>
+<div class="row mb-5">
+  <div class="d-flex justify-content-start">
+    <app-button label="Indietro" colorType="btn-secondary" (click$)="goBack()"></app-button>
+  </div>
+</div>
+<div class="row">
+  <app-table *ngIf="commits$ | async as commits" [data]="commits"></app-table>
+</div>

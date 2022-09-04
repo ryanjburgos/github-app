@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, Subject, switchMap } from 'rxjs';
@@ -14,7 +15,8 @@ export class CommitsComponent implements OnInit, OnDestroy {
   public commits$!: Observable<CommitsTableModel[]>;
 
   private _onDestroyObservable$: Subject<void> = new Subject();
-  constructor(private githubService: GithubService, private route: ActivatedRoute) {
+
+  constructor(private githubService: GithubService, private route: ActivatedRoute, private location: Location) {
     this.loadCommitsByRepoName();
   }
 
@@ -40,5 +42,9 @@ export class CommitsComponent implements OnInit, OnDestroy {
         })
       )
     );
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 }

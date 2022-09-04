@@ -1,1 +1,9 @@
-<p>button works!</p>
+<button
+  [type]="typeName"
+  [class]="'btn ' + colorType + ' ' + additionalClasses"
+  [ngClass]="{ 'btn-disabled': isDisabled }"
+  [disabled]="isDisabled"
+  (click)="onClick()"
+>
+  {{ label }}
+</button>

@@ -1,6 +1,8 @@
-<app-table
-  *ngIf="repositories$ | async as repositories"
-  [data]="repositories"
-  [filterColumns]="['avatarOwner', 'name', 'creationDate']"
-  (rowClick$)="onRepoRowClick($event)"
-></app-table>
+<div class="row">
+  <app-table
+    *ngIf="repositories$ | async as repositories"
+    [data]="repositories"
+    [filterColumns]="['avatarOwner', 'name', 'creationDate']"
+    (rowClick$)="onRepoRowClick($event)"
+  ></app-table>
+</div>
