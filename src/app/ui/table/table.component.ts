@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 export interface DataTable {
   column: string[];
@@ -7,10 +7,12 @@ export interface DataTable {
 
 export interface DataRow {
   data: any;
-  type: 'text' | 'image' | 'date';
+  type: 'text' | 'image' | 'date' | 'link';
 }
 
-export type DataRowObject = { [key: string]: DataRow };
+export interface DataRowObject {
+  [key: string]: DataRow;
+}
 
 @Component({
   selector: 'app-table',
@@ -41,7 +43,8 @@ export class TableComponent implements OnInit, OnChanges {
    * @type  Array<string>
    * @description used to filter columns
    */
-  @Input() filterColumns!: Array<string>;
+  @Input() filterColumns!: Array<keyof DataRowObject>;
+
   /**
    * @Input
    * @name dataFormat
@@ -49,6 +52,14 @@ export class TableComponent implements OnInit, OnChanges {
    * @description used to define the date format
    */
   @Input() dataFormat: string = 'dd/MM/YYYY';
+
+  /**
+   * @Output
+   * @name dataFormat
+   * @type  string
+   * @description used to define the date format
+   */
+  @Output() rowClick$: EventEmitter<DataRowObject> = new EventEmitter<DataRowObject>();
 
   /**
    * @name dataTable
@@ -72,5 +83,13 @@ export class TableComponent implements OnInit, OnChanges {
         this.dataTable.column = this.dataTable.column.filter((key) => this.filterColumns.includes(key));
       }
     }
+  }
+  /**
+   * used to handle the click on single row and emit the DataRowObject
+   * @param  {DataRowObject} dataRowObject
+   * @returns void
+   */
+  public onRowClick(dataRowObject: DataRowObject): void {
+    this.rowClick$.emit(dataRowObject);
   }
 }

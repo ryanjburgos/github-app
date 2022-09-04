@@ -4,4 +4,5 @@ export interface RepositoryTableModel {
   avatarOwner: DataRow;
   name: DataRow;
   creationDate: DataRow;
+  fullName: DataRow;
 }
