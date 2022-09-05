@@ -5,4 +5,5 @@ export interface RepositoryTableModel {
   name: DataRow;
   creationDate: DataRow;
   fullName: DataRow;
+  programmingLanguage: DataRow;
 }

@@ -1,4 +1,38 @@
-<div class="row">
+<form [formGroup]="filtersForm">
+  <div class="row">
+    <div class="col-md-3 col-sm-12">
+      <app-input label="Repository Name*" fieldName="repositoryName" formControlName="repositoryName" placeHolder="ex: Angular"></app-input>
+    </div>
+    <div class="col-md-3 col-sm-12">
+      <app-input
+        label="Programming Language"
+        fieldName="programmingLanguage"
+        formControlName="programmingLanguage"
+        placeHolder="ex: Typescript"
+      ></app-input>
+    </div>
+    <div class="col-md-3 col-sm-12">
+      <app-input label="Minimum number of stars" fieldName="minNumberOfStars" formControlName="minNumberOfStars" placeHolder="ex: 5"></app-input>
+    </div>
+    <div class="col-md-3 col-sm-12">
+      <app-input
+        label="Text contained in the title"
+        fieldName="textContainedInTheTitle"
+        formControlName="textContainedInTheTitle"
+        placeHolder="ex: Some title"
+      ></app-input>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end mt-3">
+    <app-button
+      label="Search your repo"
+      colorType="btn-success"
+      [isDisabled]="filtersForm.invalid"
+      (click$)="getRepositoriesByFilters()"
+    ></app-button>
+  </div>
+</form>
+<div class="row mt-3">
   <app-table
     *ngIf="repositories$ | async as repositories"
     [data]="repositories"

@@ -9,7 +9,7 @@ import { RepositoryResponseModel } from '../../models/dto/repository-response.mo
   providedIn: 'root',
 })
 export class GithubService {
-  private readonly BASE_URL: string = 'https://api.github.com';
+  private readonly BASE_URL: string = 'https://api.github.com/search';
 
   constructor(private http: HttpClient) {}
 
@@ -17,10 +17,13 @@ export class GithubService {
     const queryParams = {
       q: text,
     };
-    return this.http.get<BaseSearchResponseModel<RepositoryResponseModel>>(`${this.BASE_URL}/search/repositories`, { params: queryParams });
+    return this.http.get<BaseSearchResponseModel<RepositoryResponseModel>>(`${this.BASE_URL}/repositories`, { params: queryParams });
   }
 
-  public getCommitsByRepoName(fullName: string): Observable<CommitResponseModel[]> {
-    return this.http.get<CommitResponseModel[]>(`${this.BASE_URL}/repos/${fullName}/commits`);
+  public getCommitsByRepoName(text: string): Observable<BaseSearchResponseModel<CommitResponseModel>> {
+    const queryParams = {
+      q: text,
+    };
+    return this.http.get<BaseSearchResponseModel<CommitResponseModel>>(`${this.BASE_URL}/commits`, { params: queryParams });
   }
 }

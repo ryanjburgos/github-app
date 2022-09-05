@@ -1,0 +1,20 @@
+<label class="form-label" [for]="fieldName">
+  {{ label }}
+</label>
+<input
+  tabindex="-1"
+  autocomplete="off"
+  class="form-control"
+  [type]="inputType"
+  [ngClass]="{
+    'border border-danger': formField?.invalid && (formField?.dirty || formField?.touched)
+  }"
+  [placeholder]="placeHolder"
+  [id]="fieldName"
+  [name]="fieldName"
+  [value]="value"
+  [readonly]="isReadonly"
+  [disabled]="isDisabled"
+  (input)="onChange($event)"
+  (blur)="touched()"
+/>
