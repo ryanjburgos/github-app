@@ -1,7 +1,25 @@
-<div class="row mb-5">
+<div class="d-flex justify-content-center">
+  <h1>Commits Page of repo: {{ repoName }}</h1>
+</div>
+<div class="row mt-3">
   <div class="d-flex justify-content-start">
     <app-button label="Indietro" colorType="btn-secondary" (click$)="goBack()"></app-button>
   </div>
+</div>
+<div class="card p-3 mt-3">
+  <div class="row">
+    <h3>Filters</h3>
+  </div>
+  <form [formGroup]="filtersForm">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <app-input label="Text contained in commits*" fieldName="text" formControlName="text" placeHolder="ex: forms"></app-input>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <app-button label="Search your commit" colorType="btn-success" [isDisabled]="filtersForm.invalid" (click$)="getCommitsByFilter()"></app-button>
+    </div>
+  </form>
 </div>
 <div class="row">
   <app-table *ngIf="commits$ | async as commits" [data]="commits"></app-table>

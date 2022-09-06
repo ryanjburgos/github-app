@@ -10,7 +10,7 @@ import { GithubService } from '../../shared/services/http/github.service';
 import { SpinnerService } from '../../shared/services/utils/spinner.service';
 import { DataRowObject } from '../../ui/table/table.component';
 
-interface FiltersFormModel {
+interface RepoFiltersFormModel {
   repositoryName: FormControl<string>;
   programmingLanguage: FormControl<string>;
   minNumberOfStars: FormControl<string>;
@@ -25,7 +25,7 @@ interface FiltersFormModel {
 export class ReposComponent implements OnInit {
   public isLoading$: Observable<boolean> = this.spinnerService.isLoading$;
   public repositories$!: Observable<RepositoryTableModel[]>;
-  public filtersForm!: FormGroup<FiltersFormModel>;
+  public filtersForm!: FormGroup<RepoFiltersFormModel>;
 
   constructor(private githubService: GithubService, private router: Router, private spinnerService: SpinnerService) {
     this.createForm();
@@ -34,7 +34,7 @@ export class ReposComponent implements OnInit {
   public ngOnInit(): void {}
 
   public createForm(): void {
-    this.filtersForm = new FormGroup<FiltersFormModel>({
+    this.filtersForm = new FormGroup<RepoFiltersFormModel>({
       repositoryName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
       programmingLanguage: new FormControl('', { nonNullable: true }),
       minNumberOfStars: new FormControl('', { nonNullable: true }),
@@ -57,7 +57,6 @@ export class ReposComponent implements OnInit {
             name: { data: repo.name, type: 'text' },
             creationDate: { data: repo.created_at, type: 'date' },
             fullName: { data: repo.full_name, type: 'text' },
-            programmingLanguage: { data: repo.language, type: 'text' },
           };
           return repositoryTable;
         })
@@ -75,13 +74,16 @@ export class ReposComponent implements OnInit {
     this.router.navigate([AppRoutesEnum.commits], {
       queryParams: {
         repositoryName: (event as unknown as RepositoryTableModel).fullName.data,
-        language: (event as unknown as RepositoryTableModel).programmingLanguage.data,
       },
     });
   }
 
   private createQueryString(): string {
     let queryString: string = this.filtersForm.controls.repositoryName.value;
+
+    if (!!this.filtersForm.controls.textContainedInTheTitle.value) {
+      queryString += `+in:issues in:title+${this.filtersForm.controls.textContainedInTheTitle.value}`;
+    }
 
     if (!!this.filtersForm.controls.programmingLanguage.value) {
       queryString += `+language:${this.filtersForm.controls.programmingLanguage.value}`;
@@ -91,10 +93,6 @@ export class ReposComponent implements OnInit {
       queryString += `+stars:>=${this.filtersForm.controls.minNumberOfStars.value}`;
     }
 
-    if (!!this.filtersForm.controls.textContainedInTheTitle.value) {
-      // queryString += `+in:issues+state:open,closed+in:title${this.filtersForm.controls.textContainedInTheTitle.value}`; TODO verificare query string
-    }
-
-    return encodeURIComponent(queryString);
+    return queryString;
   }
 }
